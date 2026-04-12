@@ -397,7 +397,7 @@ export default function HomePage() {
                   </div>
                   <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
                     <p className="text-xs font-semibold uppercase tracking-wide text-blue-500 mb-2">Veriflow</p>
-                    <p className="text-2xl font-semibold text-slate-950">~7 sec</p>
+                    <p className="text-2xl font-semibold text-slate-950">~15 sec</p>
                     <p className="mt-1 text-xs text-slate-500">full extraction + compliance check</p>
                     <p className="mt-2 text-xs text-emerald-600 font-medium">Consistent results at line speed</p>
                   </div>
