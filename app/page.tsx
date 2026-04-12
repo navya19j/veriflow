@@ -151,10 +151,6 @@ const credibilityPoints = [
   },
 ];
 
-const apiIntegrations = [
-  { name: "FDA FoodData Central", description: "Nutrient and ingredient verification" },
-  { name: "FSSAI API", description: "India food standards compliance" },
-];
 
 /* ─────────────────────────────────────────────
    Animation variants
@@ -521,15 +517,6 @@ export default function HomePage() {
                     </p>
                   </div>
                   <div className="space-y-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">API Integrations</p>
-                    <div className="flex flex-col gap-2">
-                      {apiIntegrations.map((api) => (
-                        <div key={api.name} className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                          <span className="text-sm font-medium text-slate-950">{api.name}</span>
-                          <span className="text-xs text-slate-500">{api.description}</span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 content-start">
