@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 import { VeriflowLockup, VeriflowMark } from "@/components/veriflow-logo";
 import { Button } from "@/components/ui/button";
@@ -156,9 +156,17 @@ const credibilityPoints = [
    Animation variants
 ───────────────────────────────────────────── */
 
+const fadeIn = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.15 },
+  transition: { duration: 0.55, ease: "easeOut" },
+};
+
 const stagger = (i: number) => ({
   initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.15 },
   transition: { duration: 0.4, delay: i * 0.06, ease: "easeOut" },
 });
 
@@ -177,284 +185,296 @@ const TABS = [
 type TabId = typeof TABS[number]["id"];
 
 export default function HomePage() {
-  const [tab, setTab] = useState<TabId>("overview");
+  const [activeTab, setActiveTab] = useState<TabId>("overview");
+
+  // Track active section via IntersectionObserver
+  useEffect(() => {
+    const ids = TABS.map((t) => t.id);
+    const observers: IntersectionObserver[] = [];
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveTab(id as TabId); },
+        { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const NavPills = ({ mobile }: { mobile?: boolean }) => (
+    <>
+      {TABS.map((t) => (
+        <button
+          key={t.id}
+          onClick={() => scrollTo(t.id)}
+          className={[
+            "transition-all duration-200",
+            mobile
+              ? [
+                  "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold",
+                  activeTab === t.id
+                    ? "bg-slate-950 text-white shadow-sm"
+                    : "border border-slate-200 bg-white/80 text-slate-600",
+                ].join(" ")
+              : [
+                  "rounded-full px-3.5 py-1.5 text-sm font-medium",
+                  activeTab === t.id
+                    ? "bg-slate-950 text-white shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+                ].join(" "),
+          ].join(" ")}
+        >
+          {t.label}
+        </button>
+      ))}
+    </>
+  );
 
   return (
     <main className="min-h-screen bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(37,99,235,0.10),transparent)] text-slate-950">
 
       {/* ── Nav ── */}
       <nav className="sticky top-0 z-40 w-full">
-        {/* ── Mobile nav: two rows ── */}
+        {/* Mobile: two rows */}
         <div className="md:hidden">
           <div className="flex items-center justify-between px-4 pt-3 pb-2">
-            <a
-              href="#"
-              aria-label="Veriflow home"
-              onClick={(e) => { e.preventDefault(); setTab("overview"); }}
-              className="flex items-center rounded-full border border-white/70 bg-white/80 px-3.5 py-2 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md"
-            >
+            <a href="#overview" onClick={(e) => { e.preventDefault(); scrollTo("overview"); }} aria-label="Veriflow home"
+              className="flex items-center rounded-full border border-white/70 bg-white/80 px-3.5 py-2 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md">
               <VeriflowLockup size="sm" />
             </a>
-            <Button size="default" className="shadow-md shadow-blue-600/20 text-sm px-4" onClick={() => setTab("get-started")}>
+            <Button size="default" className="shadow-md shadow-blue-600/20 text-sm px-4" onClick={() => scrollTo("get-started")}>
               Request Demo
             </Button>
           </div>
           <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-3">
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={[
-                  "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200",
-                  tab === t.id
-                    ? "bg-slate-950 text-white shadow-sm"
-                    : "border border-slate-200 bg-white/80 text-slate-600",
-                ].join(" ")}
-              >
-                {t.label}
-              </button>
-            ))}
+            <NavPills mobile />
           </div>
         </div>
 
-        {/* ── Desktop nav: single row ── */}
+        {/* Desktop: single row */}
         <div className="hidden md:flex mx-auto max-w-7xl items-center justify-between px-5 py-3 gap-3">
-          <a
-            href="#"
-            aria-label="Veriflow home"
-            onClick={(e) => { e.preventDefault(); setTab("overview"); }}
-            className="flex shrink-0 items-center rounded-full border border-white/70 bg-white/80 px-4 py-2.5 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md"
-          >
+          <a href="#overview" onClick={(e) => { e.preventDefault(); scrollTo("overview"); }} aria-label="Veriflow home"
+            className="flex shrink-0 items-center rounded-full border border-white/70 bg-white/80 px-4 py-2.5 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md">
             <VeriflowLockup size="md" />
           </a>
           <div className="flex items-center gap-1 rounded-full border border-white/70 bg-white/80 p-1 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md">
-            {TABS.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={[
-                  "rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-200",
-                  tab === t.id
-                    ? "bg-slate-950 text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
-                ].join(" ")}
-              >
-                {t.label}
-              </button>
-            ))}
+            <NavPills />
           </div>
-          <Button size="default" className="shrink-0 shadow-md shadow-blue-600/20" onClick={() => setTab("get-started")}>
+          <Button size="default" className="shrink-0 shadow-md shadow-blue-600/20" onClick={() => scrollTo("get-started")}>
             Request Demo
           </Button>
         </div>
       </nav>
 
-      <div className="mx-auto flex w-full max-w-7xl flex-col px-5 pb-16 pt-4 sm:px-6 lg:px-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="flex flex-col gap-5"
-          >
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-5 pb-16 pt-4 sm:px-6 lg:px-8">
 
-          {/* ══════════════ OVERVIEW ══════════════ */}
-          {tab === "overview" && <>
-            <section className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white/90 shadow-[0_20px_80px_rgba(15,23,42,0.07)]">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_60%)]" />
-              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
-              <div className="relative grid gap-10 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-14 lg:py-20">
-                <div className="space-y-8 max-w-2xl">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-xs font-semibold tracking-[0.15em] text-blue-700 uppercase">
-                      Compliance + inspection layer for regulated manufacturing
-                    </span>
-                  </div>
-                  <div className="space-y-5">
-                    <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl leading-[1.05]">
-                      Catch label errors<br />
-                      <span className="text-blue-600">before they become recalls</span>
-                    </h1>
-                    <p className="text-lg leading-8 text-slate-600 max-w-xl">
-                      Veriflow verifies product labels at the production line — so manufacturers can stop non-compliant product before it reaches distribution.
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <Button size="lg" className="shadow-lg shadow-blue-600/20 px-7" onClick={() => setTab("get-started")}>
-                      Request Demo
-                      <ArrowRightIcon className="ml-2 h-4 w-4" />
-                    </Button>
-                    <Button size="lg" variant="outline" className="px-7" onClick={() => setTab("how-it-works")}>
-                      See How It Works
-                    </Button>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
-                    {["No hardware required", "FDA + FSSAI ready", "Works without wifi"].map((item) => (
-                      <div key={item} className="flex items-center gap-2 text-sm text-slate-500">
-                        <CheckIcon className="h-4 w-4 text-emerald-500" />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <Card className="border-slate-900/80 bg-slate-950 text-white overflow-hidden">
-                    <CardContent className="space-y-5 p-7">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-300">2024 Recall Signal</p>
-                        <div className="rounded-full bg-red-500/15 px-2.5 py-1 text-xs font-medium text-red-400">High risk</div>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        {heroStats.map((stat) => (
-                          <div key={stat.label} className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5">
-                            <p className="text-4xl font-semibold tracking-tight text-white">{stat.value}</p>
-                            <p className="mt-2 text-sm leading-6 text-slate-400">{stat.label}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <p className="text-sm leading-6 text-slate-400 border-t border-white/[0.06] pt-4">
-                        Most label recalls aren&apos;t caught at the line — they&apos;re caught by a retailer, a customer, or the FDA. At that point, the cost is no longer just operational.
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <div className="grid grid-cols-3 gap-3">
-                    {credibilityPoints.slice(0, 3).map((pt) => (
-                      <div key={pt.value} className="rounded-2xl border border-slate-200/80 bg-blue-50/60 p-4 text-center">
-                        <p className="text-2xl font-semibold text-slate-950">{pt.value}</p>
-                        <p className="mt-1 text-xs leading-5 text-slate-500">{pt.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+        {/* ══════════════ OVERVIEW ══════════════ */}
+        <section id="overview" className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white/90 shadow-[0_20px_80px_rgba(15,23,42,0.07)] scroll-mt-24">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_60%)]" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
+          <div className="relative grid gap-10 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-14 lg:py-20">
+            <motion.div {...fadeIn} className="space-y-8 max-w-2xl">
+              <div className="flex items-center gap-2.5">
+                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-xs font-semibold tracking-[0.15em] text-blue-700 uppercase">
+                  Compliance + inspection layer for regulated manufacturing
+                </span>
               </div>
-            </section>
-          </>}
-
-          {/* ══════════════ THE PROBLEM ══════════════ */}
-          {tab === "problem" && <>
-            <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
-              <Card className="border-slate-200/80 bg-white/90">
-                <CardContent className="flex h-full flex-col justify-between gap-6 p-5 sm:p-8">
-                  <div className="space-y-5">
-                    <SectionEyebrow label="The Problem" />
-                    <h2 className="text-3xl font-semibold tracking-tight text-slate-950 leading-tight">
-                      Existing systems know what should ship. They don&apos;t verify what actually goes out the door.
-                    </h2>
-                    <p className="text-base leading-7 text-slate-600">
-                      Fast-moving lines and manual checks are a reliable recipe for mislabeled product reaching distribution — and a recall notice weeks later.
-                    </p>
+              <div className="space-y-5">
+                <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl leading-[1.05]">
+                  Catch label errors<br />
+                  <span className="text-blue-600">before they become recalls</span>
+                </h1>
+                <p className="text-lg leading-8 text-slate-600 max-w-xl">
+                  Veriflow verifies product labels at the production line — so manufacturers can stop non-compliant product before it reaches distribution.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button size="lg" className="shadow-lg shadow-blue-600/20 px-7" onClick={() => scrollTo("get-started")}>
+                  Request Demo
+                  <ArrowRightIcon className="ml-2 h-4 w-4" />
+                </Button>
+                <Button size="lg" variant="outline" className="px-7" onClick={() => scrollTo("how-it-works")}>
+                  See How It Works
+                </Button>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
+                {["No hardware required", "FDA + FSSAI ready", "Works without wifi"].map((item) => (
+                  <div key={item} className="flex items-center gap-2 text-sm text-slate-500">
+                    <CheckIcon className="h-4 w-4 text-emerald-500" />
+                    {item}
                   </div>
-                  <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
-                    <p className="text-sm font-medium text-slate-500 mb-1">Why it keeps happening</p>
-                    <p className="text-sm leading-6 text-slate-600">QA teams rely on what the ERP or label template says should be on pack. No one confirms what&apos;s physically on the product at the moment it leaves the line.</p>
-                  </div>
-                </CardContent>
-              </Card>
-              <div className="flex flex-col gap-4">
-                {problemPoints.map((point, index) => (
-                  <motion.div key={point.title} {...stagger(index)}>
-                    <Card className="border-slate-200/80 bg-white/90 hover:-translate-y-0.5 transition-transform duration-300">
-                      <CardContent className="flex items-start gap-5 p-6">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-red-50 border border-red-100 text-sm font-bold text-red-500">
-                          0{index + 1}
-                        </div>
-                        <div className="space-y-1.5">
-                          <h3 className="text-base font-semibold text-slate-950">{point.title}</h3>
-                          <p className="text-sm leading-6 text-slate-600">{point.detail}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
                 ))}
               </div>
-            </div>
-            <div className="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
+            </motion.div>
+            <motion.div {...fadeIn} transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }} className="flex flex-col gap-4">
               <Card className="border-slate-900/80 bg-slate-950 text-white overflow-hidden">
-                <CardContent className="flex h-full flex-col justify-between gap-6 p-5 sm:p-8">
-                  <div className="space-y-5">
-                    <SectionEyebrow label="Market Positioning" dark />
-                    <h2 className="text-3xl font-semibold tracking-tight leading-tight">
-                      Veriflow verifies the label on the product — at the moment it matters.
-                    </h2>
-                    <p className="text-base leading-7 text-slate-400">
-                      The market is split between hardware-heavy inspection systems and documentation software. Manufacturers still need a practical layer that verifies finished goods in motion.
-                    </p>
+                <CardContent className="space-y-5 p-7">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-300">2024 Recall Signal</p>
+                    <div className="rounded-full bg-red-500/15 px-2.5 py-1 text-xs font-medium text-red-400">High risk</div>
                   </div>
-                  <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5">
-                    <p className="text-sm text-blue-300 font-medium">
-                      &ldquo;Most recalls aren&apos;t caught at the line — they&apos;re caught by a customer, a retailer, or the FDA.&rdquo;
-                    </p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {heroStats.map((stat) => (
+                      <div key={stat.label} className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5">
+                        <p className="text-4xl font-semibold tracking-tight text-white">{stat.value}</p>
+                        <p className="mt-2 text-sm leading-6 text-slate-400">{stat.label}</p>
+                      </div>
+                    ))}
                   </div>
+                  <p className="text-sm leading-6 text-slate-400 border-t border-white/[0.06] pt-4">
+                    Most label recalls aren&apos;t caught at the line — they&apos;re caught by a retailer, a customer, or the FDA. At that point, the cost is no longer just operational.
+                  </p>
                 </CardContent>
               </Card>
-              <div className="flex flex-col gap-4">
-                {marketGaps.map((item, index) => {
-                  const Icon = item.icon;
-                  return (
-                    <motion.div key={item.title} {...stagger(index)}>
-                      <Card className="border-slate-200/80 bg-white/90">
-                        <CardContent className="flex items-start gap-5 p-6">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 border border-slate-200 text-slate-500">
-                            <Icon className="h-5 w-5" />
-                          </div>
-                          <div className="space-y-1.5">
-                            <h3 className="text-base font-semibold text-slate-950">{item.title}</h3>
-                            <p className="text-sm leading-6 text-slate-600">{item.detail}</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-                <Card className="border-blue-200/80 bg-blue-600 text-white">
-                  <CardContent className="flex items-center gap-4 p-6">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
-                      <TargetIcon className="h-5 w-5" />
+              <div className="grid grid-cols-3 gap-3">
+                {credibilityPoints.slice(0, 3).map((pt) => (
+                  <div key={pt.value} className="rounded-2xl border border-slate-200/80 bg-blue-50/60 p-4 text-center">
+                    <p className="text-2xl font-semibold text-slate-950">{pt.value}</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-500">{pt.label}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ══════════════ THE PROBLEM ══════════════ */}
+        <section id="problem" className="grid gap-5 scroll-mt-24 lg:grid-cols-[0.9fr_1.1fr]">
+          <motion.div {...fadeIn}>
+            <Card className="border-slate-200/80 bg-white/90 h-full">
+              <CardContent className="flex h-full flex-col justify-between gap-6 p-5 sm:p-8">
+                <div className="space-y-5">
+                  <SectionEyebrow label="The Problem" />
+                  <h2 className="text-3xl font-semibold tracking-tight text-slate-950 leading-tight">
+                    Existing systems know what should ship. They don&apos;t verify what actually goes out the door.
+                  </h2>
+                  <p className="text-base leading-7 text-slate-600">
+                    Fast-moving lines and manual checks are a reliable recipe for mislabeled product reaching distribution — and a recall notice weeks later.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
+                  <p className="text-sm font-medium text-slate-500 mb-1">Why it keeps happening</p>
+                  <p className="text-sm leading-6 text-slate-600">QA teams rely on what the ERP or label template says should be on pack. No one confirms what&apos;s physically on the product at the moment it leaves the line.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          <div className="flex flex-col gap-4">
+            {problemPoints.map((point, index) => (
+              <motion.div key={point.title} {...stagger(index)}>
+                <Card className="border-slate-200/80 bg-white/90 hover:-translate-y-0.5 transition-transform duration-300">
+                  <CardContent className="flex items-start gap-5 p-6">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-red-50 border border-red-100 text-sm font-bold text-red-500">
+                      0{index + 1}
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold">Veriflow fills the gap</p>
-                      <p className="text-sm leading-6 text-blue-100">Line-side verification — no expensive hardware, no documentation-only limitations.</p>
+                    <div className="space-y-1.5">
+                      <h3 className="text-base font-semibold text-slate-950">{point.title}</h3>
+                      <p className="text-sm leading-6 text-slate-600">{point.detail}</p>
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-            </div>
-          </>}
+              </motion.div>
+            ))}
+          </div>
+        </section>
 
-          {/* ══════════════ HOW IT WORKS ══════════════ */}
-          {tab === "how-it-works" && <>
-            <div className="space-y-7">
-              <div className="space-y-3 max-w-xl">
-                <SectionEyebrow label="How It Works" />
-                <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-                  A five-step verification layer for real production environments
-                </h2>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                {workflowSteps.map((step, index) => (
-                  <motion.div key={step.title} {...stagger(index)}>
-                    <Card className="h-full border-slate-200/80 bg-white/90 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_16px_48px_rgba(37,99,235,0.10)]">
-                      <CardContent className="flex h-full flex-col gap-6 p-6">
-                        <div className="flex items-center gap-3">
-                          <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold tracking-[0.18em] text-blue-700 uppercase">
-                            {step.badge}
-                          </span>
-                          <div className="h-px flex-1 bg-slate-100" />
-                        </div>
-                        <div className="space-y-2.5">
-                          <h3 className="text-lg font-semibold text-slate-950">{step.title}</h3>
-                          <p className="text-sm leading-6 text-slate-600">{step.description}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-            <div className="relative overflow-hidden rounded-[2rem] border border-blue-100/80 bg-gradient-to-br from-blue-50/80 via-white to-slate-50/60 px-8 py-10 sm:px-10 lg:px-12">
+        {/* Positioning (part of problem section visually) */}
+        <div className="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
+          <motion.div {...fadeIn}>
+            <Card className="border-slate-900/80 bg-slate-950 text-white overflow-hidden h-full">
+              <CardContent className="flex h-full flex-col justify-between gap-6 p-5 sm:p-8">
+                <div className="space-y-5">
+                  <SectionEyebrow label="Market Positioning" dark />
+                  <h2 className="text-3xl font-semibold tracking-tight leading-tight">
+                    Veriflow verifies the label on the product — at the moment it matters.
+                  </h2>
+                  <p className="text-base leading-7 text-slate-400">
+                    The market is split between hardware-heavy inspection systems and documentation software. Manufacturers still need a practical layer that verifies finished goods in motion.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5">
+                  <p className="text-sm text-blue-300 font-medium">
+                    &ldquo;Most recalls aren&apos;t caught at the line — they&apos;re caught by a customer, a retailer, or the FDA.&rdquo;
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+          <div className="flex flex-col gap-4">
+            {marketGaps.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <motion.div key={item.title} {...stagger(index)}>
+                  <Card className="border-slate-200/80 bg-white/90">
+                    <CardContent className="flex items-start gap-5 p-6">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 border border-slate-200 text-slate-500">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <h3 className="text-base font-semibold text-slate-950">{item.title}</h3>
+                        <p className="text-sm leading-6 text-slate-600">{item.detail}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+            <Card className="border-blue-200/80 bg-blue-600 text-white">
+              <CardContent className="flex items-center gap-4 p-6">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
+                  <TargetIcon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">Veriflow fills the gap</p>
+                  <p className="text-sm leading-6 text-blue-100">Line-side verification — no expensive hardware, no documentation-only limitations.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* ══════════════ HOW IT WORKS ══════════════ */}
+        <section id="how-it-works" className="space-y-7 scroll-mt-24">
+          <motion.div {...fadeIn} className="space-y-3 max-w-xl">
+            <SectionEyebrow label="How It Works" />
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              A five-step verification layer for real production environments
+            </h2>
+          </motion.div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {workflowSteps.map((step, index) => (
+              <motion.div key={step.title} {...stagger(index)}>
+                <Card className="h-full border-slate-200/80 bg-white/90 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_16px_48px_rgba(37,99,235,0.10)]">
+                  <CardContent className="flex h-full flex-col gap-6 p-6">
+                    <div className="flex items-center gap-3">
+                      <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold tracking-[0.18em] text-blue-700 uppercase">
+                        {step.badge}
+                      </span>
+                      <div className="h-px flex-1 bg-slate-100" />
+                    </div>
+                    <div className="space-y-2.5">
+                      <h3 className="text-lg font-semibold text-slate-950">{step.title}</h3>
+                      <p className="text-sm leading-6 text-slate-600">{step.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Vision Model callout */}
+          <motion.div {...fadeIn}>
+            <div className="relative overflow-hidden rounded-[2rem] border border-blue-100/80 bg-gradient-to-br from-blue-50/80 via-white to-slate-50/60 px-6 py-10 sm:px-10 lg:px-12">
               <div className="absolute top-0 right-0 h-64 w-64 bg-[radial-gradient(circle,rgba(37,99,235,0.07),transparent_70%)]" />
               <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
                 <div className="space-y-4">
@@ -466,7 +486,7 @@ export default function HomePage() {
                     Trained on thousands of real production label images — low light, motion blur, reflective packaging, awkward angles. It reads labels the way a line operator sees them.
                   </p>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                <div className="grid gap-3 grid-cols-2">
                   {[
                     { title: "Low light & glare", detail: "Fluorescent flicker and shadows don't degrade accuracy." },
                     { title: "Angles & blur", detail: "Handheld captures and slight rotation handled without retakes." },
@@ -481,43 +501,43 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-          </>}
+          </motion.div>
+        </section>
 
-          {/* ══════════════ CAPABILITIES ══════════════ */}
-          {tab === "capabilities" && <>
-            <div className="space-y-7">
-              <div className="max-w-2xl space-y-3">
-                <SectionEyebrow label="Capabilities" />
-                <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-                  Purpose-built for QA, operations, and compliance teams
-                </h2>
-                <p className="text-base leading-7 text-slate-600">
-                  Each workflow reduces manual inspection load while improving the evidence trail behind every production decision.
-                </p>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {features.map((feature, index) => {
-                  const Icon = feature.icon;
-                  return (
-                    <motion.div key={feature.title} {...stagger(index)}>
-                      <Card className="h-full border-slate-200/80 bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(37,99,235,0.10)]">
-                        <CardContent className="flex h-full flex-col gap-5 p-5 sm:p-7">
-                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 border border-blue-100/80 text-blue-700">
-                            <Icon className="h-5 w-5" />
-                          </div>
-                          <div className="space-y-2.5">
-                            <h3 className="text-base font-semibold text-slate-950">{feature.title}</h3>
-                            <p className="text-sm leading-6 text-slate-600">{feature.description}</p>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
+        {/* ══════════════ CAPABILITIES ══════════════ */}
+        <section id="capabilities" className="space-y-7 scroll-mt-24">
+          <motion.div {...fadeIn} className="max-w-2xl space-y-3">
+            <SectionEyebrow label="Capabilities" />
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+              Purpose-built for QA, operations, and compliance teams
+            </h2>
+            <p className="text-base leading-7 text-slate-600">
+              Each workflow reduces manual inspection load while improving the evidence trail behind every production decision.
+            </p>
+          </motion.div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div key={feature.title} {...stagger(index)}>
+                  <Card className="h-full border-slate-200/80 bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(37,99,235,0.10)]">
+                    <CardContent className="flex h-full flex-col gap-5 p-5 sm:p-7">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 border border-blue-100/80 text-blue-700">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="space-y-2.5">
+                        <h3 className="text-base font-semibold text-slate-950">{feature.title}</h3>
+                        <p className="text-sm leading-6 text-slate-600">{feature.description}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
 
-            {/* Technical Credibility */}
+          {/* Technical Credibility */}
+          <motion.div {...fadeIn}>
             <Card className="overflow-hidden border-slate-200/80 bg-white/90">
               <CardContent className="flex flex-col gap-6 p-5 sm:p-8 lg:p-10">
                 <div className="grid gap-10 lg:grid-cols-[1fr_1fr]">
@@ -567,10 +587,12 @@ export default function HomePage() {
                 </div>
               </CardContent>
             </Card>
-          </>}
+          </motion.div>
+        </section>
 
-          {/* ══════════════ GET STARTED ══════════════ */}
-          {tab === "get-started" && <>
+        {/* ══════════════ REQUEST DEMO ══════════════ */}
+        <section id="get-started" className="scroll-mt-24">
+          <motion.div {...fadeIn}>
             <Card className="overflow-hidden border-slate-200/80 bg-white/90">
               <CardContent className="grid gap-10 p-5 sm:p-8 lg:grid-cols-[1fr_1fr] lg:p-12">
                 <div className="space-y-6">
@@ -601,13 +623,11 @@ export default function HomePage() {
                 <DemoForm />
               </CardContent>
             </Card>
-          </>}
-
           </motion.div>
-        </AnimatePresence>
+        </section>
 
         {/* ── Footer ── */}
-        <footer className="mt-8 border-t border-slate-200/80 pt-8 pb-4">
+        <footer className="mt-4 border-t border-slate-200/80 pt-8 pb-4">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <VeriflowMark size={32} className="shadow-md shadow-blue-600/20" />
