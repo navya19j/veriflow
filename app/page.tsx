@@ -449,21 +449,21 @@ export default function HomePage() {
             <div className="absolute top-0 right-0 h-64 w-64 bg-[radial-gradient(circle,rgba(37,99,235,0.07),transparent_70%)]" />
             <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div className="space-y-4">
-                <SectionEyebrow label="Vision Model" />
-                <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                  Built for real factory conditions, not lab setups
-                </h2>
-                <p className="text-base leading-7 text-slate-600">
-                  Trained on thousands of real production label images — low light, motion blur, reflective packaging, awkward angles. It reads labels the way a line operator sees them.
-                </p>
+                  <SectionEyebrow label="Vision Model" />
+                  <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+                    No perfect scan required. Most systems need one.
+                  </h2>
+                  <p className="text-base leading-7 text-slate-600">
+                    Competing tools fail the moment a label is slightly tilted, in shadow, or shot handheld. Veriflow's model was trained on thousands of real production-line images — not controlled studio scans — so it works the way your line actually looks.
+                  </p>
               </div>
               <div className="grid gap-3 grid-cols-2">
-                {[
-                  { title: "Low light & glare", detail: "Fluorescent flicker and shadows don't degrade accuracy." },
-                  { title: "Angles & blur", detail: "Handheld captures and slight rotation handled without retakes." },
-                  { title: "Real training data", detail: "Thousands of production-line photos — not studio scans." },
-                  { title: "Any camera", detail: "Smartphone, tablet, or existing line camera. No new hardware." },
-                ].map((item) => (
+                  {[
+                    { title: "Tilted or off-centre", detail: "Other tools reject slightly angled scans. Veriflow reads them without retakes." },
+                    { title: "Low light & shadows", detail: "Fluorescent flicker and uneven lighting that trip up fixed scanners don't affect accuracy." },
+                    { title: "Reflective packaging", detail: "Foil, gloss, and shrink-wrap surfaces that cause glare are handled without special hardware." },
+                    { title: "Any camera", detail: "Standard smartphone, tablet, or existing line camera. No specialist equipment needed." },
+                  ].map((item) => (
                   <div key={item.title} className="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm">
                     <p className="text-sm font-semibold text-slate-950">{item.title}</p>
                     <p className="mt-1.5 text-xs leading-5 text-slate-500">{item.detail}</p>
