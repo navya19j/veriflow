@@ -211,9 +211,6 @@ export default function HomePage() {
           </div>
 
           <div className="hidden items-center gap-2 md:flex">
-            <Button variant="ghost" size="default" asChild>
-              <a href="/signin">Sign In</a>
-            </Button>
             <Button size="default" className="shadow-md shadow-blue-600/20" asChild>
               <a href="#demo">Request Demo</a>
             </Button>
@@ -624,9 +621,9 @@ export default function HomePage() {
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500">
               <span>© 2026 Veriflow</span>
-              <a href="#" className="hover:text-slate-800 transition-colors">Privacy</a>
-              <a href="#" className="hover:text-slate-800 transition-colors">Terms</a>
-              <a href="#" className="hover:text-slate-800 transition-colors">Contact</a>
+              <span className="text-slate-400">Privacy</span>
+              <span className="text-slate-400">Terms</span>
+              <span className="text-slate-400">Contact</span>
             </div>
           </div>
         </footer>
