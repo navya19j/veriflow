@@ -205,7 +205,7 @@ export default function HomePage() {
             </a>
           </div>
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="flex items-center gap-2">
             <Button size="default" className="shadow-md shadow-blue-600/20" asChild>
               <a href="#demo">Request Demo</a>
             </Button>
@@ -230,7 +230,7 @@ export default function HomePage() {
               </div>
 
               <div className="space-y-5">
-                <h1 className="text-balance text-5xl font-semibold tracking-tight text-slate-950 lg:text-6xl leading-[1.05]">
+                <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl leading-[1.05]">
                   Catch label errors<br />
                   <span className="text-blue-600">before they become recalls</span>
                 </h1>
@@ -240,18 +240,18 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row">
-                <Button size="lg" className="shadow-lg shadow-blue-600/20 h-13 px-7" asChild>
+                <Button size="lg" className="shadow-lg shadow-blue-600/20 px-7" asChild>
                   <a href="#demo">
                     Request Demo
                     <ArrowRightIcon className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-                <Button size="lg" variant="outline" className="h-13 px-7" asChild>
+                <Button size="lg" variant="outline" className="px-7" asChild>
                   <a href="#how-it-works">See How It Works</a>
                 </Button>
               </div>
 
-              <div className="flex items-center gap-5 pt-1">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
                 <div className="flex items-center gap-2 text-sm text-slate-500">
                   <CheckIcon className="h-4 w-4 text-emerald-500" />
                   No hardware required
@@ -299,7 +299,7 @@ export default function HomePage() {
                 </CardContent>
               </Card>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {credibilityPoints.slice(0, 3).map((pt) => (
                   <div
                     key={pt.value}
@@ -532,7 +532,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-4 content-start">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 content-start">
                   {credibilityPoints.map((pt, index) => (
                     <motion.div key={pt.value} {...stagger(index)}>
                       <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-6 h-full">
@@ -612,7 +612,7 @@ export default function HomePage() {
 
         {/* ── CTA ── */}
         <motion.section {...fadeIn}>
-          <div className="relative overflow-hidden rounded-[2rem] bg-slate-950 px-8 py-14 shadow-[0_24px_80px_rgba(15,23,42,0.20)] sm:px-10 lg:px-14 lg:py-18">
+          <div className="relative overflow-hidden rounded-[2rem] bg-slate-950 px-8 py-14 shadow-[0_24px_80px_rgba(15,23,42,0.20)] sm:px-10 lg:px-14 lg:py-16">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(37,99,235,0.30),transparent_55%)]" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(37,99,235,0.15),transparent_55%)]" />
             <div className="absolute bottom-0 left-1/2 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
@@ -630,17 +630,17 @@ export default function HomePage() {
 
               <div className="flex flex-col gap-4 lg:items-end">
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <Button size="lg" className="h-13 px-8 bg-white text-slate-950 hover:bg-slate-100 shadow-lg" asChild>
+                  <Button size="lg" className="px-8 bg-white text-slate-950 hover:bg-slate-100 shadow-lg" asChild>
                     <a href="#demo">
                       Request Demo
                       <ArrowRightIcon className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
-                  <Button size="lg" variant="ghost" className="h-13 px-8 text-slate-300 hover:text-white hover:bg-white/10 border border-white/15" asChild>
+                  <Button size="lg" variant="ghost" className="px-8 text-slate-300 hover:text-white hover:bg-white/10 border border-white/15" asChild>
                     <a href="#how-it-works">See How It Works</a>
                   </Button>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                   {["No setup fee", "30-day pilot", "Dedicated onboarding"].map((item) => (
                     <div key={item} className="flex items-center gap-1.5 text-xs text-slate-400">
                       <CheckIcon className="h-3.5 w-3.5 text-blue-400" />
