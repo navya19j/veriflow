@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 import { VeriflowLockup, VeriflowMark } from "@/components/veriflow-logo";
@@ -534,6 +535,40 @@ export default function HomePage() {
           </Card>
         </motion.section>
 
+        {/* ── Demo Form ── */}
+        <motion.section id="demo" {...fadeIn}>
+          <Card className="overflow-hidden border-slate-200/80 bg-white/90">
+            <CardContent className="grid gap-10 p-8 lg:grid-cols-[1fr_1fr] lg:p-12">
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <SectionEyebrow label="Request a Demo" />
+                  <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
+                    See Veriflow on your production line
+                  </h2>
+                  <p className="text-base leading-7 text-slate-600">
+                    We&apos;ll walk you through a live inspection workflow tailored to your SKUs, compliance region, and existing line setup — no hardware required.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  {[
+                    { icon: CheckIcon, text: "30-minute walkthrough, no sales pressure" },
+                    { icon: CheckIcon, text: "Live label scan against your compliance rules" },
+                    { icon: CheckIcon, text: "Works with your existing cameras or a phone" },
+                  ].map(({ icon: Icon, text }) => (
+                    <div key={text} className="flex items-start gap-3 text-sm text-slate-700">
+                      <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-50 border border-blue-100 text-blue-600">
+                        <Icon className="h-3 w-3" />
+                      </div>
+                      {text}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <DemoForm />
+            </CardContent>
+          </Card>
+        </motion.section>
+
         {/* ── CTA ── */}
         <motion.section {...fadeIn}>
           <div className="relative overflow-hidden rounded-[2rem] bg-slate-950 px-8 py-14 shadow-[0_24px_80px_rgba(15,23,42,0.20)] sm:px-10 lg:px-14 lg:py-18">
@@ -598,6 +633,168 @@ export default function HomePage() {
 
       </div>
     </main>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Demo Form
+───────────────────────────────────────────── */
+
+function DemoForm() {
+  const [fields, setFields] = useState({
+    name: "", email: "", company: "", role: "",
+    skus: "", current_process: "", message: "",
+  });
+  const [regions, setRegions] = useState<string[]>([]);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const update = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+  const toggleRegion = (r: string) =>
+    setRegions((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+    try {
+      const res = await fetch("https://formspree.io/f/mjgjbvwd", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...fields, compliance_regions: regions.join(", ") }),
+      });
+      setStatus(res.ok ? "success" : "error");
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  if (status === "success") {
+    return (
+      <div className="flex flex-col items-center justify-center gap-5 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-10 text-center h-full">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+          <CheckIcon className="h-7 w-7" />
+        </div>
+        <div className="space-y-2">
+          <p className="text-lg font-semibold text-slate-950">Request received</p>
+          <p className="text-sm leading-6 text-slate-600">
+            We&apos;ll reach out within one business day to schedule your walkthrough.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const inputCls =
+    "w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-950 placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all duration-150";
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-slate-600">Full name <span className="text-red-400">*</span></label>
+          <input name="name" required value={fields.name} onChange={update} placeholder="Jane Smith" className={inputCls} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-slate-600">Work email <span className="text-red-400">*</span></label>
+          <input name="email" type="email" required value={fields.email} onChange={update} placeholder="jane@company.com" className={inputCls} />
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-slate-600">Company <span className="text-red-400">*</span></label>
+          <input name="company" required value={fields.company} onChange={update} placeholder="Acme Foods" className={inputCls} />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-slate-600">Role</label>
+          <select name="role" value={fields.role} onChange={update} className={inputCls}>
+            <option value="">Select role</option>
+            <option>QA Manager</option>
+            <option>Operations Manager</option>
+            <option>Compliance Officer</option>
+            <option>Plant Manager</option>
+            <option>CTO / Engineering</option>
+            <option>Founder / CEO</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-slate-600">Number of SKUs</label>
+          <select name="skus" value={fields.skus} onChange={update} className={inputCls}>
+            <option value="">Select range</option>
+            <option value="<50">&lt;50</option>
+            <option value="50–200">50–200</option>
+            <option value="200+">200+</option>
+          </select>
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-xs font-medium text-slate-600">Current label verification</label>
+          <select name="current_process" value={fields.current_process} onChange={update} className={inputCls}>
+            <option value="">Select process</option>
+            <option>Manual checks</option>
+            <option>Vision system</option>
+            <option>ERP only</option>
+            <option>No process</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-xs font-medium text-slate-600">Compliance region <span className="text-slate-400 font-normal">(select all that apply)</span></label>
+        <div className="flex flex-wrap gap-2">
+          {["FDA", "FSSAI", "Both", "Other"].map((r) => {
+            const active = regions.includes(r);
+            return (
+              <button
+                key={r}
+                type="button"
+                onClick={() => toggleRegion(r)}
+                className={[
+                  "rounded-full border px-4 py-1.5 text-xs font-semibold transition-all duration-150",
+                  active
+                    ? "border-blue-500 bg-blue-600 text-white shadow-sm shadow-blue-600/20"
+                    : "border-slate-200 bg-slate-50 text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700",
+                ].join(" ")}
+              >
+                {r}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <label className="text-xs font-medium text-slate-600">What would you like to verify? <span className="text-slate-400 font-normal">(optional)</span></label>
+        <textarea
+          name="message"
+          value={fields.message}
+          onChange={update}
+          rows={3}
+          placeholder="e.g. allergen labels for FDA, BRCGS line clearance, net weight declarations..."
+          className={inputCls + " resize-none"}
+        />
+      </div>
+
+      {status === "error" && (
+        <p className="rounded-xl border border-red-100 bg-red-50 px-4 py-2.5 text-sm text-red-600">
+          Something went wrong — please email us directly at hello@veriflow.com
+        </p>
+      )}
+      <Button
+        size="lg"
+        type="submit"
+        className="mt-1 w-full shadow-lg shadow-blue-600/20"
+        disabled={status === "loading"}
+      >
+        {status === "loading" ? "Sending…" : "Request Demo"}
+        {status !== "loading" && <ArrowRightIcon className="ml-2 h-4 w-4" />}
+      </Button>
+      <p className="text-center text-xs text-slate-400">No commitment. Responds within 1 business day.</p>
+    </form>
   );
 }
 
