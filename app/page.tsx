@@ -364,7 +364,7 @@ export default function HomePage() {
                 <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
                   <p className="text-sm font-medium text-slate-500 mb-2">Why it keeps happening?</p>
                   <p className="text-sm leading-6 text-slate-600">
-                    QA teams do run manual checks — but human attention degrades over a shift. Fatigue introduces 60–90% variability in defect detection rates. A label error on unit 400 of the day gets caught far less reliably than unit 4.
+                    QA teams do run manual checks — but human attention degrades over a shift. Fatigue means a label error on unit 400 of the day gets caught far less reliably than unit 4.
                   </p>
                 </div>
               </CardContent>
@@ -393,7 +393,7 @@ export default function HomePage() {
                     <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Manual check</p>
                     <p className="text-2xl font-semibold text-slate-950">~60 sec</p>
                     <p className="mt-1 text-xs text-slate-500">per label, per inspector</p>
-                    <p className="mt-2 text-xs text-red-500 font-medium">60–90% variability from fatigue</p>
+                    <p className="mt-2 text-xs text-red-500 font-medium">Accuracy degrades with fatigue</p>
                   </div>
                   <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
                     <p className="text-xs font-semibold uppercase tracking-wide text-blue-500 mb-2">Veriflow</p>
