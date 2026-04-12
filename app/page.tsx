@@ -171,7 +171,7 @@ const TABS = [
   { id: "problem",      label: "The Problem" },
   { id: "how-it-works", label: "How It Works" },
   { id: "capabilities", label: "Capabilities" },
-  { id: "get-started",  label: "Get Started" },
+  { id: "get-started",  label: "Request Demo" },
 ] as const;
 
 type TabId = typeof TABS[number]["id"];
