@@ -107,7 +107,7 @@ const features = [
   {
     title: "Multi-Region Compliance",
     description:
-      "Apply rulesets for U.S., India, and other regulated markets without rebuilding workflows for each region.",
+      "Currently supports U.S. FDA and Indian FSSAI standards. Compliance rules are maintained and updated as regulations change — no manual ruleset updates needed.",
     icon: GlobeIcon,
   },
 ];
@@ -394,30 +394,18 @@ export default function HomePage() {
               <div className="space-y-4">
                 <SectionEyebrow label="Vision Model" />
                 <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                  You don&apos;t need a perfect image. The model is built to handle real factory conditions.
+                  Built for real factory conditions, not lab setups
                 </h2>
                 <p className="text-base leading-7 text-slate-600">
-                  Most vision systems fail in the field because they were trained in labs. Veriflow&apos;s model was trained on thousands of real production label images — under fluorescent flicker, motion blur, low light, and awkward angles. It reads labels the way a line operator sees them, not the way a camera brochure shows them.
+                  Trained on thousands of real production label images — low light, motion blur, reflective packaging, awkward angles. It reads labels the way a line operator sees them.
                 </p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                 {[
-                  {
-                    title: "Low light & natural conditions",
-                    detail: "Fluorescent flicker, shadows, and uneven lighting don't degrade extraction accuracy.",
-                  },
-                  {
-                    title: "Angles, glare & motion blur",
-                    detail: "Hand-held phone captures, slight rotation, and reflective packaging are handled without retakes.",
-                  },
-                  {
-                    title: "Trained on real label images",
-                    detail: "Thousands of production-line label photos — not studio scans — form the training base.",
-                  },
-                  {
-                    title: "Any camera will do",
-                    detail: "Works from a standard smartphone, tablet, or existing line camera. No specialist hardware.",
-                  },
+                  { title: "Low light & glare", detail: "Fluorescent flicker and shadows don't degrade accuracy." },
+                  { title: "Angles & blur", detail: "Handheld captures and slight rotation handled without retakes." },
+                  { title: "Real training data", detail: "Thousands of production-line photos — not studio scans." },
+                  { title: "Any camera", detail: "Smartphone, tablet, or existing line camera. No new hardware." },
                 ].map((item) => (
                   <div key={item.title} className="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm">
                     <p className="text-sm font-semibold text-slate-950">{item.title}</p>
