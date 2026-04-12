@@ -362,7 +362,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
-                  <p className="text-sm font-medium text-slate-500 mb-1">Why it keeps happening</p>
+                    <p className="text-sm font-medium text-slate-500 mb-1">Why it keeps happening?</p>
                   <p className="text-sm leading-6 text-slate-600">QA teams rely on what the ERP or label template says should be on pack. No one confirms what&apos;s physically on the product at the moment it leaves the line.</p>
                 </div>
               </CardContent>
