@@ -184,7 +184,41 @@ export default function HomePage() {
 
       {/* ── Nav ── */}
       <nav className="sticky top-0 z-40 w-full">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 gap-3">
+        {/* ── Mobile nav: two rows ── */}
+        <div className="md:hidden">
+          <div className="flex items-center justify-between px-4 pt-3 pb-2">
+            <a
+              href="#"
+              aria-label="Veriflow home"
+              onClick={(e) => { e.preventDefault(); setTab("overview"); }}
+              className="flex items-center rounded-full border border-white/70 bg-white/80 px-3.5 py-2 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md"
+            >
+              <VeriflowLockup size="sm" />
+            </a>
+            <Button size="default" className="shadow-md shadow-blue-600/20 text-sm px-4" onClick={() => setTab("get-started")}>
+              Request Demo
+            </Button>
+          </div>
+          <div className="no-scrollbar flex gap-1.5 overflow-x-auto px-4 pb-3">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={[
+                  "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all duration-200",
+                  tab === t.id
+                    ? "bg-slate-950 text-white shadow-sm"
+                    : "border border-slate-200 bg-white/80 text-slate-600",
+                ].join(" ")}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Desktop nav: single row ── */}
+        <div className="hidden md:flex mx-auto max-w-7xl items-center justify-between px-5 py-3 gap-3">
           <a
             href="#"
             aria-label="Veriflow home"
@@ -193,9 +227,7 @@ export default function HomePage() {
           >
             <VeriflowLockup size="md" />
           </a>
-
-          {/* Tab bar */}
-          <div className="hidden items-center gap-1 rounded-full border border-white/70 bg-white/80 p-1 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md md:flex">
+          <div className="flex items-center gap-1 rounded-full border border-white/70 bg-white/80 p-1 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md">
             {TABS.map((t) => (
               <button
                 key={t.id}
@@ -211,18 +243,6 @@ export default function HomePage() {
               </button>
             ))}
           </div>
-
-          {/* Mobile tab selector */}
-          <select
-            className="flex rounded-full border border-white/70 bg-white/80 px-3 py-2 text-sm font-medium text-slate-700 shadow-[0_8px_32px_rgba(15,23,42,0.08)] backdrop-blur-md md:hidden"
-            value={tab}
-            onChange={(e) => setTab(e.target.value as TabId)}
-          >
-            {TABS.map((t) => (
-              <option key={t.id} value={t.id}>{t.label}</option>
-            ))}
-          </select>
-
           <Button size="default" className="shrink-0 shadow-md shadow-blue-600/20" onClick={() => setTab("get-started")}>
             Request Demo
           </Button>
@@ -245,7 +265,7 @@ export default function HomePage() {
             <section className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white/90 shadow-[0_20px_80px_rgba(15,23,42,0.07)]">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.08),transparent_60%)]" />
               <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-200/60 to-transparent" />
-              <div className="relative grid gap-10 px-8 py-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-14 lg:py-20">
+              <div className="relative grid gap-10 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-14 lg:py-20">
                 <div className="space-y-8 max-w-2xl">
                   <div className="flex items-center gap-2.5">
                     <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -287,7 +307,7 @@ export default function HomePage() {
                         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-300">2024 Recall Signal</p>
                         <div className="rounded-full bg-red-500/15 px-2.5 py-1 text-xs font-medium text-red-400">High risk</div>
                       </div>
-                      <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="grid grid-cols-2 gap-3">
                         {heroStats.map((stat) => (
                           <div key={stat.label} className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5">
                             <p className="text-4xl font-semibold tracking-tight text-white">{stat.value}</p>
@@ -300,7 +320,7 @@ export default function HomePage() {
                       </p>
                     </CardContent>
                   </Card>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-3">
                     {credibilityPoints.slice(0, 3).map((pt) => (
                       <div key={pt.value} className="rounded-2xl border border-slate-200/80 bg-blue-50/60 p-4 text-center">
                         <p className="text-2xl font-semibold text-slate-950">{pt.value}</p>
@@ -317,7 +337,7 @@ export default function HomePage() {
           {tab === "problem" && <>
             <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
               <Card className="border-slate-200/80 bg-white/90">
-                <CardContent className="flex h-full flex-col justify-between gap-8 p-8">
+                <CardContent className="flex h-full flex-col justify-between gap-6 p-5 sm:p-8">
                   <div className="space-y-5">
                     <SectionEyebrow label="The Problem" />
                     <h2 className="text-3xl font-semibold tracking-tight text-slate-950 leading-tight">
@@ -353,7 +373,7 @@ export default function HomePage() {
             </div>
             <div className="grid gap-5 lg:grid-cols-[0.85fr_1.15fr]">
               <Card className="border-slate-900/80 bg-slate-950 text-white overflow-hidden">
-                <CardContent className="flex h-full flex-col justify-between gap-8 p-8">
+                <CardContent className="flex h-full flex-col justify-between gap-6 p-5 sm:p-8">
                   <div className="space-y-5">
                     <SectionEyebrow label="Market Positioning" dark />
                     <h2 className="text-3xl font-semibold tracking-tight leading-tight">
@@ -413,7 +433,7 @@ export default function HomePage() {
                   A five-step verification layer for real production environments
                 </h2>
               </div>
-              <div className="grid gap-4 lg:grid-cols-5">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 {workflowSteps.map((step, index) => (
                   <motion.div key={step.title} {...stagger(index)}>
                     <Card className="h-full border-slate-200/80 bg-white/90 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_16px_48px_rgba(37,99,235,0.10)]">
@@ -481,7 +501,7 @@ export default function HomePage() {
                   return (
                     <motion.div key={feature.title} {...stagger(index)}>
                       <Card className="h-full border-slate-200/80 bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(37,99,235,0.10)]">
-                        <CardContent className="flex h-full flex-col gap-5 p-7">
+                        <CardContent className="flex h-full flex-col gap-5 p-5 sm:p-7">
                           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-50 border border-blue-100/80 text-blue-700">
                             <Icon className="h-5 w-5" />
                           </div>
@@ -499,7 +519,7 @@ export default function HomePage() {
 
             {/* Technical Credibility */}
             <Card className="overflow-hidden border-slate-200/80 bg-white/90">
-              <CardContent className="flex flex-col gap-6 p-8 lg:p-10">
+              <CardContent className="flex flex-col gap-6 p-5 sm:p-8 lg:p-10">
                 <div className="grid gap-10 lg:grid-cols-[1fr_1fr]">
                   <div className="space-y-3">
                     <SectionEyebrow label="Technical Credibility" />
@@ -552,7 +572,7 @@ export default function HomePage() {
           {/* ══════════════ GET STARTED ══════════════ */}
           {tab === "get-started" && <>
             <Card className="overflow-hidden border-slate-200/80 bg-white/90">
-              <CardContent className="grid gap-10 p-8 lg:grid-cols-[1fr_1fr] lg:p-12">
+              <CardContent className="grid gap-10 p-5 sm:p-8 lg:grid-cols-[1fr_1fr] lg:p-12">
                 <div className="space-y-6">
                   <div className="space-y-3">
                     <SectionEyebrow label="Request a Demo" />
