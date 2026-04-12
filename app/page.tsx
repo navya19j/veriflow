@@ -50,7 +50,7 @@ const workflowSteps = [
   {
     title: "Extract",
     description:
-      "Veriflow extracts 37+ structured fields — identity, nutrition, allergens, weight, and lot data — in seconds.",
+      "AI extracts structured label data — product identity, nutrition, allergens, weight, and lot details — in seconds.",
     badge: "02",
   },
   {
@@ -331,7 +331,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <p className="text-sm leading-6 text-slate-400 border-t border-white/[0.06] pt-4">
-                    Most label recalls aren&apos;t caught at the line — they&apos;re caught by a retailer, a customer, or the FDA. At that point, the cost is no longer just operational.
+                    Label errors don&apos;t announce themselves — they move through distribution until a retailer, customer, or regulator catches them.
                   </p>
                 </CardContent>
               </Card>
@@ -442,6 +442,38 @@ export default function HomePage() {
           </div>
         </div>
 
+
+        {/* ══════════════ VISION MODEL ══════════════ */}
+        <motion.div {...fadeIn}>
+          <div className="relative overflow-hidden rounded-[2rem] border border-blue-100/80 bg-gradient-to-br from-blue-50/80 via-white to-slate-50/60 px-6 py-10 sm:px-10 lg:px-12">
+            <div className="absolute top-0 right-0 h-64 w-64 bg-[radial-gradient(circle,rgba(37,99,235,0.07),transparent_70%)]" />
+            <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+              <div className="space-y-4">
+                <SectionEyebrow label="Vision Model" />
+                <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+                  Built for real factory conditions, not lab setups
+                </h2>
+                <p className="text-base leading-7 text-slate-600">
+                  Trained on thousands of real production label images — low light, motion blur, reflective packaging, awkward angles. It reads labels the way a line operator sees them.
+                </p>
+              </div>
+              <div className="grid gap-3 grid-cols-2">
+                {[
+                  { title: "Low light & glare", detail: "Fluorescent flicker and shadows don't degrade accuracy." },
+                  { title: "Angles & blur", detail: "Handheld captures and slight rotation handled without retakes." },
+                  { title: "Real training data", detail: "Thousands of production-line photos — not studio scans." },
+                  { title: "Any camera", detail: "Smartphone, tablet, or existing line camera. No new hardware." },
+                ].map((item) => (
+                  <div key={item.title} className="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm">
+                    <p className="text-sm font-semibold text-slate-950">{item.title}</p>
+                    <p className="mt-1.5 text-xs leading-5 text-slate-500">{item.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         {/* ══════════════ HOW IT WORKS ══════════════ */}
         <section id="how-it-works" className="space-y-7 scroll-mt-24">
           <motion.div {...fadeIn} className="space-y-3 max-w-xl">
@@ -471,36 +503,6 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Vision Model callout */}
-          <motion.div {...fadeIn}>
-            <div className="relative overflow-hidden rounded-[2rem] border border-blue-100/80 bg-gradient-to-br from-blue-50/80 via-white to-slate-50/60 px-6 py-10 sm:px-10 lg:px-12">
-              <div className="absolute top-0 right-0 h-64 w-64 bg-[radial-gradient(circle,rgba(37,99,235,0.07),transparent_70%)]" />
-              <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-                <div className="space-y-4">
-                  <SectionEyebrow label="Vision Model" />
-                  <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                    Built for real factory conditions, not lab setups
-                  </h2>
-                  <p className="text-base leading-7 text-slate-600">
-                    Trained on thousands of real production label images — low light, motion blur, reflective packaging, awkward angles. It reads labels the way a line operator sees them.
-                  </p>
-                </div>
-                <div className="grid gap-3 grid-cols-2">
-                  {[
-                    { title: "Low light & glare", detail: "Fluorescent flicker and shadows don't degrade accuracy." },
-                    { title: "Angles & blur", detail: "Handheld captures and slight rotation handled without retakes." },
-                    { title: "Real training data", detail: "Thousands of production-line photos — not studio scans." },
-                    { title: "Any camera", detail: "Smartphone, tablet, or existing line camera. No new hardware." },
-                  ].map((item) => (
-                    <div key={item.title} className="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm">
-                      <p className="text-sm font-semibold text-slate-950">{item.title}</p>
-                      <p className="mt-1.5 text-xs leading-5 text-slate-500">{item.detail}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
         </section>
 
         {/* ══════════════ CAPABILITIES ══════════════ */}
@@ -653,17 +655,6 @@ export default function HomePage() {
    Demo Form
 ───────────────────────────────────────────── */
 
-const FREE_EMAIL_DOMAINS = new Set([
-  "gmail.com","googlemail.com","yahoo.com","yahoo.in","yahoo.co.uk","yahoo.co.in",
-  "hotmail.com","hotmail.in","outlook.com","live.com","msn.com","icloud.com",
-  "me.com","mac.com","aol.com","protonmail.com","proton.me","tutanota.com",
-  "zoho.com","yandex.com","yandex.ru","rediffmail.com","inbox.com","mail.com",
-]);
-
-function isPersonalEmail(email: string): boolean {
-  const domain = email.split("@")[1]?.toLowerCase();
-  return !!domain && FREE_EMAIL_DOMAINS.has(domain);
-}
 
 function DemoForm() {
   const [fields, setFields] = useState({
@@ -672,32 +663,15 @@ function DemoForm() {
   });
   const [regions, setRegions] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [emailError, setEmailError] = useState("");
 
-  const update = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFields((f) => ({ ...f, [name]: value }));
-    if (name === "email") setEmailError("");
-  };
-
-  const validateEmail = () => {
-    if (!fields.email) return;
-    if (isPersonalEmail(fields.email)) {
-      setEmailError("Please use your work email address.");
-    } else {
-      setEmailError("");
-    }
-  };
+  const update = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const toggleRegion = (r: string) =>
     setRegions((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isPersonalEmail(fields.email)) {
-      setEmailError("Please use your work email address.");
-      return;
-    }
     setStatus("loading");
     try {
       const res = await fetch("https://formspree.io/f/mjgjbvwd", {
@@ -738,23 +712,8 @@ function DemoForm() {
           <input name="name" required value={fields.name} onChange={update} placeholder="Jane Smith" className={inputCls} />
         </div>
         <div className="space-y-1.5">
-          <label className="text-xs font-medium text-slate-600">Work email <span className="text-red-400">*</span></label>
-          <input
-            name="email"
-            type="email"
-            required
-            value={fields.email}
-            onChange={update}
-            onBlur={validateEmail}
-            placeholder="jane@company.com"
-            className={[inputCls, emailError ? "border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-red-100" : ""].join(" ")}
-          />
-          {emailError && (
-            <p className="flex items-center gap-1.5 text-xs text-red-500">
-              <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 shrink-0"><path fillRule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 3.75a.75.75 0 0 0-1.5 0v3.5a.75.75 0 0 0 1.5 0v-3.5zM8 10a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" /></svg>
-              {emailError}
-            </p>
-          )}
+          <label className="text-xs font-medium text-slate-600">Email <span className="text-red-400">*</span></label>
+          <input name="email" type="email" required value={fields.email} onChange={update} placeholder="jane@example.com" className={inputCls} />
         </div>
       </div>
 
