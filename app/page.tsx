@@ -496,23 +496,19 @@ export default function HomePage() {
                 })}
               </div>
             </div>
-          </>}
 
-          {/* ══════════════ GET STARTED ══════════════ */}
-          {tab === "get-started" && <>
+            {/* Technical Credibility */}
             <Card className="overflow-hidden border-slate-200/80 bg-white/90">
               <CardContent className="flex flex-col gap-6 p-8 lg:p-10">
                 <div className="grid gap-10 lg:grid-cols-[1fr_1fr]">
-                  <div className="space-y-6">
-                    <div className="space-y-3">
-                      <SectionEyebrow label="Technical Credibility" />
-                      <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
-                        Built for industrial reliability, not demo-day optics
-                      </h2>
-                      <p className="text-base leading-7 text-slate-600">
-                        Runs close to the line with structured validation, durable traceability, and integrations built around real compliance workflows.
-                      </p>
-                    </div>
+                  <div className="space-y-3">
+                    <SectionEyebrow label="Technical Credibility" />
+                    <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
+                      Built for industrial reliability, not demo-day optics
+                    </h2>
+                    <p className="text-base leading-7 text-slate-600">
+                      Runs close to the line with structured validation, durable traceability, and integrations built around real compliance workflows.
+                    </p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 content-start">
                     {credibilityPoints.map((pt, index) => (
@@ -551,7 +547,10 @@ export default function HomePage() {
                 </div>
               </CardContent>
             </Card>
+          </>}
 
+          {/* ══════════════ GET STARTED ══════════════ */}
+          {tab === "get-started" && <>
             <Card className="overflow-hidden border-slate-200/80 bg-white/90">
               <CardContent className="grid gap-10 p-8 lg:grid-cols-[1fr_1fr] lg:p-12">
                 <div className="space-y-6">
