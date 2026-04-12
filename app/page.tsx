@@ -145,11 +145,6 @@ const credibilityPoints = [
     detail: "Configurable checks mapped to FDA, FSSAI, and regulated manufacturing workflows",
   },
   {
-    value: "Offline",
-    label: "On-device capable",
-    detail: "On-device AI runs without a network connection for reliable line-side operation",
-  },
-  {
     value: "SQLite",
     label: "Local audit logs",
     detail: "Durable, local-first audit trail with image evidence and structured data",
@@ -267,7 +262,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-500">
                   <CheckIcon className="h-4 w-4 text-emerald-500" />
-                  Offline capable
+                  Works without wifi
                 </div>
               </div>
             </motion.div>
@@ -329,7 +324,7 @@ export default function HomePage() {
                   Existing systems know what should ship. They don&apos;t verify what actually goes out the door.
                 </h2>
                 <p className="text-base leading-7 text-slate-600">
-                  Label errors are consistently among the top causes of recalls in regulated manufacturing — especially when production moves fast and line checks remain manual.
+                  Fast-moving lines and manual checks are a reliable recipe for mislabeled product reaching distribution — and a recall notice weeks later.
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
@@ -450,7 +445,7 @@ export default function HomePage() {
               </div>
               <div className="rounded-2xl border border-white/[0.08] bg-white/[0.04] p-5">
                 <p className="text-sm text-blue-300 font-medium">
-                  &ldquo;The gap is between what was designed to ship and what actually leaves the line.&rdquo;
+                  &ldquo;Most recalls aren&apos;t caught at the line — they&apos;re caught by a customer, a retailer, or the FDA.&rdquo;
                 </p>
               </div>
             </CardContent>
@@ -492,42 +487,70 @@ export default function HomePage() {
         {/* ── Tech Credibility ── */}
         <motion.section id="technology" {...fadeIn}>
           <Card className="overflow-hidden border-slate-200/80 bg-white/90">
-            <CardContent className="grid gap-10 p-8 lg:grid-cols-[1fr_1fr] lg:p-10">
-              <div className="space-y-6">
-                <div className="space-y-3">
-                  <SectionEyebrow label="Technical Credibility" />
-                  <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
-                    Built for industrial reliability, not demo-day optics
-                  </h2>
-                  <p className="text-base leading-7 text-slate-600">
-                    Veriflow is engineered to run close to the line with strong traceability, structured validation, and integrations that support real compliance workflows.
-                  </p>
+            <CardContent className="flex flex-col gap-6 p-8 lg:p-10">
+              <div className="grid gap-10 lg:grid-cols-[1fr_1fr]">
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <SectionEyebrow label="Technical Credibility" />
+                    <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
+                      Built for industrial reliability, not demo-day optics
+                    </h2>
+                    <p className="text-base leading-7 text-slate-600">
+                      Runs close to the line with structured validation, durable traceability, and integrations built around real compliance workflows.
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">API Integrations</p>
+                    <div className="flex flex-col gap-2">
+                      {apiIntegrations.map((api) => (
+                        <div key={api.name} className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                          <span className="text-sm font-medium text-slate-950">{api.name}</span>
+                          <span className="text-xs text-slate-500">{api.description}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+                <div className="grid grid-cols-3 gap-4 content-start">
+                  {credibilityPoints.map((pt, index) => (
+                    <motion.div key={pt.value} {...stagger(index)}>
+                      <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-6 h-full">
+                        <p className="text-3xl font-semibold tracking-tight text-slate-950">{pt.value}</p>
+                        <p className="mt-1 text-sm font-medium text-blue-600">{pt.label}</p>
+                        <p className="mt-2 text-xs leading-5 text-slate-500">{pt.detail}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
 
-                <div className="space-y-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">API Integrations</p>
-                  <div className="flex flex-col gap-2">
-                    {apiIntegrations.map((api) => (
-                      <div key={api.name} className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
-                        <span className="text-sm font-medium text-slate-950">{api.name}</span>
-                        <span className="text-xs text-slate-500">{api.description}</span>
+              {/* ── On-device callout ── */}
+              <div className="relative overflow-hidden rounded-2xl bg-slate-950 p-7 lg:p-8">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(37,99,235,0.25),transparent_60%)]" />
+                <div className="relative grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2.5">
+                      <WifiOffIcon className="h-5 w-5 text-blue-400" />
+                      <span className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-300">On-Device AI — Add-on</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">
+                      Works where wifi doesn&apos;t
+                    </h3>
+                    <p className="text-sm leading-6 text-slate-400 max-w-2xl">
+                      Factory floors, cold storage, and remote production lines often have spotty or zero connectivity. Veriflow&apos;s on-device mode runs the full AI extraction and compliance check locally — no cloud dependency, no dropped inspections. Audit logs sync automatically when the connection returns.
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 flex-col gap-2 lg:items-end">
+                    {["Full AI extraction, on-device", "Local SQLite audit logs", "Auto-syncs when online"].map((item) => (
+                      <div key={item} className="flex items-center gap-2 text-sm text-slate-300">
+                        <CheckIcon className="h-4 w-4 text-blue-400 shrink-0" />
+                        {item}
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 content-start">
-                {credibilityPoints.map((pt, index) => (
-                  <motion.div key={pt.value} {...stagger(index)}>
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-6 h-full">
-                      <p className="text-3xl font-semibold tracking-tight text-slate-950">{pt.value}</p>
-                      <p className="mt-1 text-sm font-medium text-blue-600">{pt.label}</p>
-                      <p className="mt-2 text-xs leading-5 text-slate-500">{pt.detail}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
             </CardContent>
           </Card>
         </motion.section>
@@ -928,6 +951,20 @@ function TargetIcon({ className }: { className?: string }) {
       <circle cx="12" cy="12" r="9" />
       <circle cx="12" cy="12" r="4" />
       <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+    </svg>
+  );
+}
+
+function WifiOffIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <line x1="2" y1="2" x2="22" y2="22" />
+      <path d="M8.5 16.5a5 5 0 0 1 7 0" />
+      <path d="M2 8.82a15 15 0 0 1 4.17-2.65" />
+      <path d="M10.66 5c4.01-.36 8.14.9 11.34 3.76" />
+      <path d="M16.85 11.25a10 10 0 0 1 2.22 1.68" />
+      <path d="M5 13a10 10 0 0 1 5.24-2.76" />
+      <circle cx="12" cy="20" r="1" />
     </svg>
   );
 }
