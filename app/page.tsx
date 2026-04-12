@@ -615,6 +615,18 @@ export default function HomePage() {
    Demo Form
 ───────────────────────────────────────────── */
 
+const FREE_EMAIL_DOMAINS = new Set([
+  "gmail.com","googlemail.com","yahoo.com","yahoo.in","yahoo.co.uk","yahoo.co.in",
+  "hotmail.com","hotmail.in","outlook.com","live.com","msn.com","icloud.com",
+  "me.com","mac.com","aol.com","protonmail.com","proton.me","tutanota.com",
+  "zoho.com","yandex.com","yandex.ru","rediffmail.com","inbox.com","mail.com",
+]);
+
+function isPersonalEmail(email: string): boolean {
+  const domain = email.split("@")[1]?.toLowerCase();
+  return !!domain && FREE_EMAIL_DOMAINS.has(domain);
+}
+
 function DemoForm() {
   const [fields, setFields] = useState({
     name: "", email: "", company: "", role: "",
@@ -622,15 +634,32 @@ function DemoForm() {
   });
   const [regions, setRegions] = useState<string[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [emailError, setEmailError] = useState("");
 
-  const update = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-    setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const update = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFields((f) => ({ ...f, [name]: value }));
+    if (name === "email") setEmailError("");
+  };
+
+  const validateEmail = () => {
+    if (!fields.email) return;
+    if (isPersonalEmail(fields.email)) {
+      setEmailError("Please use your work email address.");
+    } else {
+      setEmailError("");
+    }
+  };
 
   const toggleRegion = (r: string) =>
     setRegions((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isPersonalEmail(fields.email)) {
+      setEmailError("Please use your work email address.");
+      return;
+    }
     setStatus("loading");
     try {
       const res = await fetch("https://formspree.io/f/mjgjbvwd", {
@@ -672,7 +701,22 @@ function DemoForm() {
         </div>
         <div className="space-y-1.5">
           <label className="text-xs font-medium text-slate-600">Work email <span className="text-red-400">*</span></label>
-          <input name="email" type="email" required value={fields.email} onChange={update} placeholder="jane@company.com" className={inputCls} />
+          <input
+            name="email"
+            type="email"
+            required
+            value={fields.email}
+            onChange={update}
+            onBlur={validateEmail}
+            placeholder="jane@company.com"
+            className={[inputCls, emailError ? "border-red-300 bg-red-50/40 focus:border-red-400 focus:ring-red-100" : ""].join(" ")}
+          />
+          {emailError && (
+            <p className="flex items-center gap-1.5 text-xs text-red-500">
+              <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 shrink-0"><path fillRule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 3.75a.75.75 0 0 0-1.5 0v3.5a.75.75 0 0 0 1.5 0v-3.5zM8 10a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" /></svg>
+              {emailError}
+            </p>
+          )}
         </div>
       </div>
 
