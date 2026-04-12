@@ -294,7 +294,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <p className="text-sm leading-6 text-slate-400 border-t border-white/[0.06] pt-4">
-                    Label errors remain the most expensive preventable failure mode in food manufacturing. Veriflow puts verification at the line, where operators can still act.
+                    Most label recalls aren&apos;t caught at the line — they&apos;re caught by a retailer, a customer, or the FDA. At that point, the cost is no longer just operational.
                   </p>
                 </CardContent>
               </Card>
@@ -328,15 +328,8 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5">
-                <p className="text-sm font-medium text-slate-500 mb-3">Common failure modes</p>
-                <div className="space-y-2">
-                  {["Undeclared allergens", "Wrong net weight", "Missing regulatory fields", "Incorrect lot / date codes"].map((item) => (
-                    <div key={item} className="flex items-center gap-2.5 text-sm text-slate-700">
-                      <div className="h-1.5 w-1.5 rounded-full bg-red-400 shrink-0" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
+                <p className="text-sm font-medium text-slate-500 mb-1">Why it keeps happening</p>
+                <p className="text-sm leading-6 text-slate-600">QA teams rely on what the ERP or label template says should be on pack. No one confirms what&apos;s physically on the product at the moment it leaves the line.</p>
               </div>
             </CardContent>
           </Card>
@@ -369,9 +362,6 @@ export default function HomePage() {
                 A five-step verification layer for real production environments
               </h2>
             </div>
-            <p className="text-sm leading-6 text-slate-500 max-w-xs">
-              Designed to run at the line — not as a back-office compliance tool.
-            </p>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-5">
