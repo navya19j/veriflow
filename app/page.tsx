@@ -386,6 +386,49 @@ export default function HomePage() {
           </div>
         </motion.section>
 
+        {/* ── Vision Model Callout ── */}
+        <motion.section {...fadeIn}>
+          <div className="relative overflow-hidden rounded-[2rem] border border-blue-100/80 bg-gradient-to-br from-blue-50/80 via-white to-slate-50/60 px-8 py-10 sm:px-10 lg:px-12">
+            <div className="absolute top-0 right-0 h-64 w-64 bg-[radial-gradient(circle,rgba(37,99,235,0.07),transparent_70%)]" />
+            <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+              <div className="space-y-4">
+                <SectionEyebrow label="Vision Model" />
+                <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+                  You don&apos;t need a perfect image. The model is built to handle real factory conditions.
+                </h2>
+                <p className="text-base leading-7 text-slate-600">
+                  Most vision systems fail in the field because they were trained in labs. Veriflow&apos;s model was trained on thousands of real production label images — under fluorescent flicker, motion blur, low light, and awkward angles. It reads labels the way a line operator sees them, not the way a camera brochure shows them.
+                </p>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                {[
+                  {
+                    title: "Low light & natural conditions",
+                    detail: "Fluorescent flicker, shadows, and uneven lighting don't degrade extraction accuracy.",
+                  },
+                  {
+                    title: "Angles, glare & motion blur",
+                    detail: "Hand-held phone captures, slight rotation, and reflective packaging are handled without retakes.",
+                  },
+                  {
+                    title: "Trained on real label images",
+                    detail: "Thousands of production-line label photos — not studio scans — form the training base.",
+                  },
+                  {
+                    title: "Any camera will do",
+                    detail: "Works from a standard smartphone, tablet, or existing line camera. No specialist hardware.",
+                  },
+                ].map((item) => (
+                  <div key={item.title} className="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm">
+                    <p className="text-sm font-semibold text-slate-950">{item.title}</p>
+                    <p className="mt-1.5 text-xs leading-5 text-slate-500">{item.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
         {/* ── Features ── */}
         <motion.section id="features" {...fadeIn} className="space-y-7">
           <div className="max-w-2xl space-y-3">
