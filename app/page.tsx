@@ -467,17 +467,17 @@ export default function HomePage() {
               <div className="space-y-4">
                   <SectionEyebrow label="Vision Model" />
                   <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-                    No perfect scan required. Most systems need one.
+                    Works with real images, not just perfect ones
                   </h2>
                   <p className="text-base leading-7 text-slate-600">
-                    Competing tools fail the moment a label is slightly tilted, in shadow, or shot handheld. Veriflow's model was trained on thousands of real production-line images — not controlled studio scans — so it works the way your line actually looks.
+                    Trained on thousands of real production-line images — low light, motion blur, reflective packaging, awkward angles. Most inspection tools need a controlled setup to work reliably. Veriflow doesn&apos;t.
                   </p>
               </div>
               <div className="grid gap-3 grid-cols-2">
                   {[
-                    { title: "Tilted or off-centre", detail: "Other tools reject slightly angled scans. Veriflow reads them without retakes." },
-                    { title: "Low light & shadows", detail: "Fluorescent flicker and uneven lighting that trip up fixed scanners don't affect accuracy." },
-                    { title: "Reflective packaging", detail: "Foil, gloss, and shrink-wrap surfaces that cause glare are handled without special hardware." },
+                    { title: "Tilted or off-centre", detail: "Slightly angled or handheld captures read accurately — no repositioning needed." },
+                    { title: "Low light & shadows", detail: "Fluorescent flicker and uneven lighting handled without degrading extraction accuracy." },
+                    { title: "Reflective packaging", detail: "Foil, gloss, and shrink-wrap surfaces with glare are processed without special hardware." },
                     { title: "Any camera", detail: "Standard smartphone, tablet, or existing line camera. No specialist equipment needed." },
                   ].map((item) => (
                   <div key={item.title} className="rounded-2xl border border-slate-200/80 bg-white/80 p-5 shadow-sm">
